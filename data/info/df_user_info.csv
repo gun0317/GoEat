@@ -1,4 +1,4 @@
-personId,timestamp,userName,sex,age,aloneHow,eatAlone,eatDate,eatTogether
+userId,timestamp,userName,sex,age,aloneHow,eatAlone,eatDate,eatTogether
 0,10-6-2018 14:32:49,이영건,남자,24,집에서 음식을 해 먹는다.,볶음밥,파스타,
 1,10-6-2018 15:18:04,성창민,남자,20,밖에서 사 먹는다.,덥밥,데이트안함,고기꾸어먹음
 2,10-6-2018 15:19:56,윤혜진,여자,20,밖에서 사 먹는다.,알밥,파스타,떡볶이
