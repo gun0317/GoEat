@@ -1,6 +1,11 @@
 import requests
 from bs4 import BeautifulSoup as BS
 import re
+from collections import Counter
+from konlpy.tag import Hannanum
+from konlpy.tag import Kkma
+from konlpy.utils import concordance, pprint
+
 
 class GoEatWebCrawler:
 

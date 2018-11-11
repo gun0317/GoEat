@@ -1,8 +1,16 @@
-model.recommend_items(userId,topn,verbose=False).foodId.tolist()
+1.음식 추천
 
-#userId의 추천 음식 topn개의 foodId를 list로 보여줌
+model.recommend_items(userId,topn,verbose=False).foodName.tolist()
+#userId(int)의 추천 음식 topn(int)개의 foodId(int)를 list로 보여줌
 
 model.recommend_items(userId,topn,verbose=True).foodName.tolist()
 
-#userId의 추천 음식 topn개의 foodName을 list로 보여줌
+#userId(int)의 추천 음식 topn(int)개의 foodName(str)을 list로 보여줌
+
+
+2. 새로운 아이템 입력
+
+새로 들어오는 유저에게 n개 항목 질문한 것을 interactions_df와 같은 format(userId, foodId, eventStrength)으로 만들어서
+원래 dataframe에 병합하여 주어주면 python에서 import하여 처리가능
+
 
