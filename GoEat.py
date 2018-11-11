@@ -1,3 +1,9 @@
+"""GoEat Food Recommender model
+Taenyun Kim
+
+Most of the codes are adapted from https://www.kaggle.com/gspmoreira/recommender-systems-in-python-101"""
+
+
 #import modules
 import numpy as np
 import scipy
@@ -51,17 +57,105 @@ def get_items_interacted(person_id, interactions_df):
 
 #Top-N accuracy metrics consts
 
-#EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS = 0
-
 class ModelEvaluator:
 
-    def set_random_sample_non_interacted(self,EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS):
+    def __init__(self,interactions_full_df,interactions_train_df,interactions_test_df,food_df,EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS = 15):
+        self.interactions_full_indexed_df = interactions_full_df.set_index('userId')
+        self.interactions_train_indexed_df = interactions_train_df.set_index('userId')
+        self.interactions_test_indexed_df = interactions_test_df.set_index('userId')
+        self.food_df = food_df
         self.EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS = EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS
 
 
+    #[dcg_at_k, ndcg_at_k] code adapted from Tie-Yan Liu
+    def dcg_at_k(self,r, k, method=0):
+
+        """Score is discounted cumulative gain (dcg)
+        Relevance is positive real values.  Can use binary
+        as the previous methods.
+        Example from
+        http://www.stanford.edu/class/cs276/handouts/EvaluationNew-handout-6-per.pdf
+        >>> r = [3, 2, 3, 0, 0, 1, 2, 2, 3, 0]
+        >>> dcg_at_k(r, 1)
+        3.0
+        >>> dcg_at_k(r, 1, method=1)
+        3.0
+        >>> dcg_at_k(r, 2)
+        5.0
+        >>> dcg_at_k(r, 2, method=1)
+        4.2618595071429155
+        >>> dcg_at_k(r, 10)
+        9.6051177391888114
+        >>> dcg_at_k(r, 11)
+        9.6051177391888114
+        Args:
+        r: Relevance scores (list or numpy) in rank order
+        (first element is the first item)
+        k: Number of results to consider
+        method: If 0 then weights are [1.0, 1.0, 0.6309, 0.5, 0.4307, ...]
+                If 1 then weights are [1.0, 0.6309, 0.5, 0.4307, ...]
+
+        Returns:
+        Discounted cumulative gain
+        """
+
+
+        r = np.asfarray(r)[:k]
+        if r.size:
+            if method == 0:
+                return r[0] + np.sum(r[1:] / np.log2(np.arange(2, r.size + 1)))
+            elif method == 1:
+                return np.sum(r / np.log2(np.arange(2, r.size + 2)))
+            else:
+                raise ValueError('method must be 0 or 1.')
+        return 0.
+
+
+    def ndcg_at_k(self,r, k, method=0):
+
+        """Score is normalized discounted cumulative gain (ndcg)
+        Relevance is positive real values.  Can use binary
+        as the previous methods.
+        Example from
+        http://www.stanford.edu/class/cs276/handouts/EvaluationNew-handout-6-per.pdf
+        >>> r = [3, 2, 3, 0, 0, 1, 2, 2, 3, 0]
+        >>> ndcg_at_k(r, 1)
+        1.0
+        >>> r = [2, 1, 2, 0]
+        >>> ndcg_at_k(r, 4)
+        0.9203032077642922
+        >>> ndcg_at_k(r, 4, method=1)
+        0.96519546960144276
+        >>> ndcg_at_k([0], 1)
+        0.0
+        >>> ndcg_at_k([1], 2)
+        1.0
+        Args:
+        r: Relevance scores (list or numpy) in rank order
+            (first element is the first item)
+        k: Number of results to consider
+
+        method: If 0 then weights are [1.0, 1.0, 0.6309, 0.5, 0.4307, ...]
+                If 1 then weights are [1.0, 0.6309, 0.5, 0.4307, ...]
+                Returns:
+        Normalized discounted cumulative gain
+        """
+
+        dcg_max = self.dcg_at_k(sorted(r, reverse=True), k, method)
+        if not dcg_max:
+            return 0.
+        return self.dcg_at_k(r, k, method) / dcg_max
+
+    def get_items_interacted(self, person_id, interactions_df):
+        # Get the user's data and merge in the movie information.
+        interacted_items = interactions_df.loc[person_id]['foodId']
+        return set(interacted_items if type(interacted_items) == pd.Series else [interacted_items])
+
+
+
     def get_not_interacted_items_sample(self, person_id, sample_size, seed=42):
-        interacted_items = get_items_interacted(person_id, interactions_full_indexed_df)
-        all_items = set(food_df['foodId'])
+        interacted_items = self.get_items_interacted(person_id, self.interactions_full_indexed_df)
+        all_items = set(self.food_df['foodId'])
         non_interacted_items = all_items - interacted_items
 
         random.seed(seed)
@@ -78,8 +172,8 @@ class ModelEvaluator:
 
     def evaluate_model_for_user(self, model, person_id):
         #Getting the items in test set
-        interacted_values_testset = interactions_test_indexed_df.loc[person_id]
-        if type(interacted_values_testset['foodId']) == pd.core.series.Series:
+        interacted_values_testset = self.interactions_test_indexed_df.loc[person_id]
+        if type(interacted_values_testset['foodId']) == pd.Series:
             person_interacted_items_testset = set(interacted_values_testset['foodId'])
         else:
             person_interacted_items_testset = set([int(interacted_values_testset['foodId'])])
@@ -88,8 +182,10 @@ class ModelEvaluator:
         #Getting a ranked recommendation list from a model for a given user
         person_recs_df = model.recommend_items(person_id,
                                                items_to_ignore=get_items_interacted(person_id,
-                                                                                    interactions_train_indexed_df),
+                                                                                    self.interactions_train_indexed_df),
                                                topn=10000000000)
+
+
 
         hits_at_5_count = 0
         hits_at_10_count = 0
@@ -99,7 +195,8 @@ class ModelEvaluator:
             #(to represent items that are assumed to be no relevant to the user)
             non_interacted_items_sample = self.get_not_interacted_items_sample(person_id,
                                                                           sample_size=self.EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS,
-                                                                          seed=item_id%(2**32)) ## seed=item_id%(2**32)
+                                                                          seed=item_id%(2**32))
+
             #Combining the current interacted item with the 100 random items
             items_to_filter_recs = non_interacted_items_sample.union(set([item_id]))
 
@@ -112,22 +209,42 @@ class ModelEvaluator:
             hit_at_10, index_at_10 = self._verify_hit_top_n(item_id, valid_recs, 10)
             hits_at_10_count += hit_at_10
 
+
         #Recall is the rate of the interacted items that are ranked among the Top-N recommended items,
         #when mixed with a set of non-relevant items
         recall_at_5 = hits_at_5_count / float(interacted_items_count_testset)
         recall_at_10 = hits_at_10_count / float(interacted_items_count_testset)
 
+        #get NDCG
+        food_recs = person_recs_df.foodId.values
+        actual_food_rank=[]
+        for food in food_recs:
+            actual_strength = interacted_values_testset.eventStrength[interacted_values_testset.foodId == food]
+            if len(actual_strength) == 0:
+                actual_strength = 0
+            else:
+                actual_strength = actual_strength.item()
+            actual_food_rank.append(actual_strength)
+
+        ndcg_at_10 = self.ndcg_at_k(actual_food_rank, 10, method=0)
+        ndcg_at_5 = self.ndcg_at_k(actual_food_rank, 5, method=0)
+
+
+
         person_metrics = {'hits@5_count':hits_at_5_count,
                           'hits@10_count':hits_at_10_count,
                           'interacted_count': interacted_items_count_testset,
                           'recall@5': recall_at_5,
-                          'recall@10': recall_at_10}
+                          'recall@10': recall_at_10,
+                          'ndcg@5': ndcg_at_5,
+                          'ndcg@10': ndcg_at_10
+                          }
         return person_metrics
 
     def evaluate_model(self, model):
         #print('Running evaluation for users')
         people_metrics = []
-        for idx, person_id in enumerate(list(interactions_test_indexed_df.index.unique().values)):
+        for idx, person_id in enumerate(list(self.interactions_test_indexed_df.index.unique().values)):
             #if idx % 100 == 0 and idx > 0:
             #    print('%d users processed' % idx)
             person_metrics = self.evaluate_model_for_user(model, person_id)
@@ -140,10 +257,14 @@ class ModelEvaluator:
 
         global_recall_at_5 = detailed_results_df['hits@5_count'].sum() / float(detailed_results_df['interacted_count'].sum())
         global_recall_at_10 = detailed_results_df['hits@10_count'].sum() / float(detailed_results_df['interacted_count'].sum())
+        global_ndcg_at_10 = np.mean(detailed_results_df['ndcg@10'])
+        global_ndcg_at_5 = np.mean(detailed_results_df['ndcg@5'])
 
         global_metrics = {'modelName': model.get_model_name(),
                           'recall@5': global_recall_at_5,
-                          'recall@10': global_recall_at_10}
+                          'recall@10': global_recall_at_10,
+                          'ndcg@5': global_ndcg_at_5,
+                          'ndcg@10': global_ndcg_at_10}
         return global_metrics, detailed_results_df
 
 class CFRecommender:
@@ -239,24 +360,26 @@ def item_recommenation(model, food_df):
 
     return rec_model
 
-class ContentBasedRecommender:
+class CBRecommender:
 
     MODEL_NAME = 'Content-Based'
 
-    def __init__(self, items_df=None,item_ids=None):
-        self.item_ids = item_ids
+    def __init__(self, items_df,user_profiles,tfidf_matrix):
+        self.item_ids = items_df['foodId'].tolist()
         self.items_df = items_df
+        self.user_profiles = user_profiles
+        self.tfidf_matrix = tfidf_matrix
 
     def get_model_name(self):
         return self.MODEL_NAME
 
     def _get_similar_items_to_user_profile(self, person_id, topn=1000):
         #Computes the cosine similarity between the user profile and all item profiles
-        cosine_similarities = cosine_similarity(user_profiles[person_id], tfidf_matrix)
+        cosine_similarities = cosine_similarity(self.user_profiles[person_id], self.tfidf_matrix)
         #Gets the top similar items
         similar_indices = cosine_similarities.argsort().flatten()[-topn:]
         #Sort the similar items by similarity
-        similar_items = sorted([(item_ids[i], cosine_similarities[0,i]) for i in similar_indices], key=lambda x: -x[1])
+        similar_items = sorted([(self.item_ids[i], cosine_similarities[0,i]) for i in similar_indices], key=lambda x: -x[1])
         return similar_items
 
     def recommend_items(self, user_id, items_to_ignore=[], topn=10, verbose=False):
@@ -277,11 +400,13 @@ class ContentBasedRecommender:
 
 
         return recommendations_df
+
+
 def tfidf_vectorizer(food_df,column_name,stopwords_list ):
     stopwords_list = stopwords_list
     vectorizer = TfidfVectorizer(analyzer='word',
-                     ngram_range=(1, 2),
-                     min_df=0.003,
+                     ngram_range=(1, 1),
+                     min_df=0.005,
                      max_df=0.5,
                      max_features=5000,
                      stop_words=stopwords_list)
@@ -294,33 +419,41 @@ def tfidf_vectorizer(food_df,column_name,stopwords_list ):
     return tfidf_matrix, tfidf_feature_names
 
 
-def get_item_profile(item_ids):
-    idx = item_ids.index(item_id)
-    item_profile = tfidf_matrix[idx:idx+1]
-    return item_profile
+class user_profiles_builder:
 
-def get_item_profiles(ids):
-    item_profiles_list = [get_item_profile(x) for x in ids]
-    item_profiles = scipy.sparse.vstack(item_profiles_list)
-    return item_profiles
+    def build_users_profiles(self,interactions_full_df,food_df,tfidf_matrix):
+        self.item_ids = food_df['foodId'].tolist()
+        self.tfidf_matrix = tfidf_matrix
 
-def build_users_profile(person_id, interactions_indexed_df):
-    interactions_person_df = interactions_indexed_df.loc[person_id]
-    user_item_profiles = get_item_profiles(interactions_person_df['foodId'])
-
-    user_item_strengths = np.array(interactions_person_df['eventStrength']).reshape(-1,1)
-    #Weighted average of item profiles by the interactions strength
-    user_item_strengths_weighted_avg = np.sum(user_item_profiles.multiply(user_item_strengths), axis=0) / np.sum(user_item_strengths)
-    user_profile_norm = sklearn.preprocessing.normalize(user_item_strengths_weighted_avg)
-    return user_profile_norm
-
-def build_users_profiles(interactions_full_df,food_df):
-    interactions_indexed_df = interactions_full_df[interactions_full_df['foodId'] \
+        interactions_indexed_df = interactions_full_df[interactions_full_df['foodId'] \
                                                    .isin(food_df['foodId'])].set_index('userId')
-    user_profiles = {}
-    for person_id in interactions_indexed_df.index.unique():
-        user_profiles[person_id] = build_users_profile(person_id, interactions_indexed_df)
-    return user_profiles
+        user_profiles = {}
+        for person_id in interactions_indexed_df.index.unique():
+            user_profiles[person_id] = self.build_users_profile(person_id, interactions_indexed_df)
+        return user_profiles
+
+    def build_users_profile(self,person_id, interactions_indexed_df):
+        interactions_person_df = interactions_indexed_df.loc[person_id]
+        user_item_profiles = self.get_item_profiles(interactions_person_df['foodId'])
+
+        user_item_strengths = np.array(interactions_person_df['eventStrength']).reshape(-1,1)
+        #Weighted average of item profiles by the interactions strength
+        user_item_strengths_weighted_avg = np.sum(user_item_profiles.multiply(user_item_strengths), axis=0) / np.sum(user_item_strengths)
+        user_profile_norm = sklearn.preprocessing.normalize(user_item_strengths_weighted_avg)
+        return user_profile_norm
+
+    def get_item_profiles(self,ids):
+        item_profiles_list = [self.get_item_profile(x) for x in ids]
+        item_profiles = scipy.sparse.vstack(item_profiles_list)
+        return item_profiles
+
+    def get_item_profile(self,item_id):
+        idx = self.item_ids.index(item_id)
+        item_profile = self.tfidf_matrix[idx:idx+1]
+        return item_profile
+
+
+
 
 
 def joint_recommender_model(recommender_model, *args):
@@ -396,7 +529,7 @@ def new_user_info(old_user_info_df, userId,timestamp,userName,sex,age,aloneHow,e
                                     columns = ['userId','timestamp','userName','sex','age','aloneHow','eatAlone','eatDate','eatTogether'])
     old_user_info_df = old_user_info_df.append(new_user_info_df,ignore_index=True)
 
-def cold_start_question(userId,number):
+def cold_start_question(userId,food_df,number):
     foodIdlist = food_df.foodId.tolist()
     selected_content = np.random.choice(foodIdlist,number,replace=False )
 

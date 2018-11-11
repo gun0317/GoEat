@@ -1,0 +1,8 @@
+model.recommend_items(userId,topn,verbose=False).foodId.tolist()
+
+#userId의 추천 음식 topn개의 foodId를 list로 보여줌
+
+model.recommend_items(userId,topn,verbose=True).foodName.tolist()
+
+#userId의 추천 음식 topn개의 foodName을 list로 보여줌
+
