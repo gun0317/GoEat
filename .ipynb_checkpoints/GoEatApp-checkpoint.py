@@ -54,9 +54,7 @@ cf_model = GoEat.CFRecommender(cf_preds_df, food_df)
 
 #Hybrid Model buliding
 hybrid_model = GoEat.HybridRecommender(cb_model,cf_model,food_df,method='harmonic')
-rec_foods = hybrid_model.recommend_items(999,topn=3,items_to_ignore=new_user.foodId.tolist(),verbose=True)
-print('\n')
-print('당신께 추천드리는 음식은!!!\n')
-print('1번 째!  ' + rec_foods.loc[0,'foodName'])
-print('2번 째!  ' + rec_foods.loc[1,'foodName'])
-print('3번 째!  ' + rec_foods.loc[2,'foodName'])
+
+print('당신이 좋아하는 음식은!')
+print(hybrid_model.recommend_items(999,topn=3,items_to_ignore=new_user.foodId.tolist(),verbose=True).foodName)
+

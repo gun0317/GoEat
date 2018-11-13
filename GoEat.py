@@ -334,7 +334,7 @@ def users_items_svd(interactions_df, nfactors =15):
     users_ids = list(users_items_pivot_matrix_df.index)
 
     #The number of factors to factor the user-item matrix.
-    NUMBER_OF_FACTORS_MF = 15
+    NUMBER_OF_FACTORS_MF = nfactors
 
     #Performs matrix factorization of the original user item matrix
 
@@ -457,10 +457,12 @@ class HybridRecommender:
 
     MODEL_NAME = 'Hybrid'
 
-    def __init__(self, cb_rec_model, cf_rec_model, items_df):
+    def __init__(self, cb_rec_model, cf_rec_model, items_df, method = 'product'):
         self.cb_rec_model = cb_rec_model
         self.cf_rec_model = cf_rec_model
         self.items_df = items_df
+        self.method = method
+
 
     def get_model_name(self):
         return self.MODEL_NAME
@@ -479,9 +481,14 @@ class HybridRecommender:
                                    how = 'inner',
                                    left_on = 'foodId',
                                    right_on = 'foodId')
+        if self.method == 'product':
+            #Computing a hybrid recommendation score by multiplying CF and CB scores
+            recs_df['recStrengthHybrid'] = recs_df['recStrengthCB'] * recs_df['recStrengthCF']
 
-        #Computing a hybrid recommendation score based on CF and CB scores
-        recs_df['recStrengthHybrid'] = recs_df['recStrengthCB'] * recs_df['recStrengthCF']
+        elif self.method == 'harmonic':
+            recs_df.loc[recs_df.recStrengthCF < 0,'recStrengthCF'] = 0
+            recs_df['recStrengthHybrid'] = 2 * recs_df['recStrengthCB'] * recs_df['recStrengthCF'] / (recs_df['recStrengthCB'] + recs_df['recStrengthCF'])
+
 
         #Sorting recommendations by hybrid score
         recommendations_df = recs_df.sort_values('recStrengthHybrid', ascending=False).head(topn)
