@@ -171,7 +171,6 @@ def get_rec(user_index):
         col_name.append(column[0].replace('\ufeff',''))
 
 
-
     food_detail_df = pd.DataFrame(list(data),columns = col_name)
     food_detail_df.index = food_detail_df.index + 1
 
