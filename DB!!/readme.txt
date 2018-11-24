@@ -1,7 +1,17 @@
+ï»¿
+**foreign key ê´€ê³„: ER diagram ê·¸ë¦¼ì— ìˆìŒ!
 
-**foreign key °ü°è: ER diagram ±×¸²¿¡ ÀÖÀ½!
+ì‚¬ìš©ë°©ë²•: 
+1. mySQL ì„¤ì¹˜ í›„ localhost ë§Œë“¬
+2. .sqlíŒŒì¼ ì‹¤í–‰ (workbenchë¡œ)
+3. localhostì˜ schemaì— goeat ìƒì„±
+4. workbenchì—ì„œ .sqlíŒŒì¼ ì‹¤í–‰(ë²ˆê°œ) ->localhost:3306ìœ¼ë¡œ DBìƒì„±
 
-Æ÷ÇÔµÈ Å×ÀÌºí : 7°³
+
+
+
+
+í¬í•¨ëœ í…Œì´ë¸” : 7ê°œ
 food
 food_detail
 interactions
@@ -10,14 +20,14 @@ user_detail
 user_info
 user_profiles
 
-º¯°æ»çÇ× 20181115
+ë³€ê²½ì‚¬í•­ 20181115
 
-userIndex, foodIndex ¿¡ AI Ãß°¡
-¹øÈ£,¾ÆÀÌµğ,ºñ¹ø Çü½Ä º¯°æ
-¼³¹®Á¶»ç2 Æ÷ÇÔ
-delete option : cascade Ãß°¡
+userIndex, foodIndex ì— AI ì¶”ê°€
+ë²ˆí˜¸,ì•„ì´ë””,ë¹„ë²ˆ í˜•ì‹ ë³€ê²½
+ì„¤ë¬¸ì¡°ì‚¬2 í¬í•¨
+delete option : cascade ì¶”ê°€
 
 
 
 Q)
-**update option : No action / Restricted / cascade / set null Áß ¾î¶²°Í?
+**update option : No action / Restricted / cascade / set null ì¤‘ ì–´ë–¤ê²ƒ?
