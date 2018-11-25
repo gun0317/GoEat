@@ -10,7 +10,6 @@ import scipy
 import pandas as pd
 import math
 import random
-import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -19,6 +18,7 @@ from scipy.sparse.linalg import svds
 from itertools import combinations
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
+from sklearn.preprocessing import scale, robust_scale, minmax_scale, maxabs_scale, normalize
 
 def users_interaction(interactions_df,num_interaction = 5):
 
@@ -406,8 +406,8 @@ def tfidf_vectorizer(food_df,column_name,stopwords_list ):
     stopwords_list = stopwords_list
     vectorizer = TfidfVectorizer(analyzer='word',
                      ngram_range=(1, 1),
-                     min_df=0.005,
-                     max_df=0.5,
+                     min_df=1,
+                     max_df=1,
                      max_features=5000,
                      stop_words=stopwords_list)
     item_ids = food_df['foodIndex'].tolist()
@@ -443,7 +443,7 @@ class user_profiles_builder:
         user_item_strengths = np.array(interactions_person_df['eventStrength']).reshape(-1,1)
         #Weighted average of item profiles by the interactions strength
         user_item_strengths_weighted_avg = np.sum(user_item_profiles.multiply(user_item_strengths), axis=0) / np.sum(user_item_strengths)
-        user_profile_norm = sklearn.preprocessing.normalize(user_item_strengths_weighted_avg)
+        user_profile_norm = normalize(user_item_strengths_weighted_avg)
         return user_profile_norm
 
     def get_item_profiles(self,ids):
@@ -492,6 +492,13 @@ class HybridRecommender:
         elif self.method == 'harmonic':
             recs_df.loc[recs_df.recStrengthCF < 0,'recStrengthCF'] = 0
             recs_df['recStrengthHybrid'] = 2 * recs_df['recStrengthCB'] * recs_df['recStrengthCF'] / (recs_df['recStrengthCB'] + recs_df['recStrengthCF'])
+
+        elif self.method == 'harmonic_normalize':
+            rec_cf_values = minmax_scale(recs_df['recStrengthCF'])
+            rec_cb_values = minmax_scale(recs_df['recStrengthCB'])
+
+
+            recs_df['recStrengthHybrid'] = 2 * rec_cb_values * rec_cf_values / (rec_cb_values + rec_cf_values+1e-6)
 
 
         #Sorting recommendations by hybrid score
