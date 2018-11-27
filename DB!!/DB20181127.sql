@@ -14,7 +14,8 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
+drop schema IF EXISTS goeat;
+create schema goeat;
 use goeat;
 
 
@@ -26,9 +27,9 @@ DROP TABLE IF EXISTS `food`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `food` (
-  `﻿foodIndex` int(11) NOT NULL AUTO_INCREMENT,
+  `foodIndex` int(11) NOT NULL AUTO_INCREMENT,
   `foodName` text,
-  PRIMARY KEY (`﻿foodIndex`)
+  PRIMARY KEY (`foodIndex`)
 ) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,12 +51,12 @@ DROP TABLE IF EXISTS `food_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `food_detail` (
-  `﻿foodIndex` int(11) NOT NULL,
+  `foodIndex` int(11) NOT NULL,
   `foodName` text,
   `foodRecipe` text,
   `foodRecipeNoun` text,
-  PRIMARY KEY (`﻿foodIndex`),
-  CONSTRAINT `foodIndex_detail` FOREIGN KEY (`﻿foodIndex`) REFERENCES `food` (`﻿foodindex`) ON DELETE CASCADE
+  PRIMARY KEY (`foodIndex`),
+  CONSTRAINT `foodIndex_detail` FOREIGN KEY (`foodIndex`) REFERENCES `food` (`foodindex`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -77,13 +78,13 @@ DROP TABLE IF EXISTS `interactions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `interactions` (
-  `﻿userIndex` int(11) NOT NULL,
+  `userIndex` int(11) NOT NULL,
   `foodIndex` int(11) NOT NULL,
   `eventStrength` int(11) DEFAULT NULL,
-  PRIMARY KEY (`﻿userIndex`,`foodIndex`),
+  PRIMARY KEY (`userIndex`,`foodIndex`),
   KEY `foodIndex_idx` (`foodIndex`),
-  CONSTRAINT `foodIndex_interactions` FOREIGN KEY (`foodIndex`) REFERENCES `food` (`﻿foodindex`) ON DELETE CASCADE,
-  CONSTRAINT `userIndex_interactions` FOREIGN KEY (`﻿userIndex`) REFERENCES `user_info` (`﻿userindex`) ON DELETE CASCADE
+  CONSTRAINT `foodIndex_interactions` FOREIGN KEY (`foodIndex`) REFERENCES `food` (`foodindex`) ON DELETE CASCADE,
+  CONSTRAINT `userIndex_interactions` FOREIGN KEY (`userIndex`) REFERENCES `user_info` (`userindex`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -105,7 +106,7 @@ DROP TABLE IF EXISTS `tfidf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `tfidf` (
-  `﻿foodIndex` int(11) NOT NULL,
+  `foodIndex` int(11) NOT NULL,
   `가능` double DEFAULT NULL,
   `가루` double DEFAULT NULL,
   `가스` double DEFAULT NULL,
@@ -891,8 +892,8 @@ CREATE TABLE `tfidf` (
   `훈제오리` double DEFAULT NULL,
   `훈제오리고기` double DEFAULT NULL,
   `훠궈` double DEFAULT NULL,
-  PRIMARY KEY (`﻿foodIndex`),
-  CONSTRAINT `foodIndex_tfidf` FOREIGN KEY (`﻿foodIndex`) REFERENCES `food` (`﻿foodindex`) ON DELETE CASCADE
+  PRIMARY KEY (`foodIndex`),
+  CONSTRAINT `foodIndex_tfidf` FOREIGN KEY (`foodIndex`) REFERENCES `food` (`foodindex`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -914,13 +915,13 @@ DROP TABLE IF EXISTS `user_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_detail` (
-  `﻿userIndex` int(11) NOT NULL,
+  `userIndex` int(11) NOT NULL,
   `aloneHow` text,
   `eatAlone` text,
   `eatDate` text,
   `eatTogether` text,
-  PRIMARY KEY (`﻿userIndex`),
-  CONSTRAINT `userIndex_detail` FOREIGN KEY (`﻿userIndex`) REFERENCES `user_info` (`﻿userindex`) ON DELETE CASCADE
+  PRIMARY KEY (`userIndex`),
+  CONSTRAINT `userIndex_detail` FOREIGN KEY (`userIndex`) REFERENCES `user_info` (`userindex`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -942,14 +943,14 @@ DROP TABLE IF EXISTS `user_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_info` (
-  `﻿userIndex` int(11) NOT NULL AUTO_INCREMENT,
+  `userIndex` int(11) NOT NULL AUTO_INCREMENT,
   `userId` text,
   `password` text,
   `userName` text,
   `phone` text,
   `age` int(11) DEFAULT NULL,
   `sex` text,
-  PRIMARY KEY (`﻿userIndex`)
+  PRIMARY KEY (`userIndex`)
 ) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -971,7 +972,7 @@ DROP TABLE IF EXISTS `user_profiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_profiles` (
-  `﻿userIndex` int(11) NOT NULL,
+  `userIndex` int(11) NOT NULL,
   `가능` double DEFAULT NULL,
   `가루` double DEFAULT NULL,
   `가스` double DEFAULT NULL,
@@ -1757,8 +1758,8 @@ CREATE TABLE `user_profiles` (
   `훈제오리` double DEFAULT NULL,
   `훈제오리고기` double DEFAULT NULL,
   `훠궈` double DEFAULT NULL,
-  PRIMARY KEY (`﻿userIndex`),
-  CONSTRAINT `userIndex_profiles` FOREIGN KEY (`﻿userIndex`) REFERENCES `user_info` (`﻿userindex`) ON DELETE CASCADE
+  PRIMARY KEY (`userIndex`),
+  CONSTRAINT `userIndex_profiles` FOREIGN KEY (`userIndex`) REFERENCES `user_info` (`userindex`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
