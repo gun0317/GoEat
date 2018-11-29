@@ -10,6 +10,9 @@
     Statement stmt;
     boolean found = false;
 
+    int userIndex = -1;
+    String userName = "";
+
     try
     {
         Class.forName( "com.mysql.jdbc.Driver" );
@@ -20,15 +23,19 @@
         out.println(rs);
 
         while(rs.next()){
+
           if(rs.getString("userId").equals(userID) && rs.getString("password").equals(userPW)){
-            session.setAttribute("id", rs.getString("userId"));
-            session.setAttribute("name", rs.getString("userName"));
+            userIndex = rs.getInt("userIndex");
+            userName = rs.getString("userName");
             found = true;
             break;
           };
         }
         if(found){
-         %> <script> alert("로그인에 성공하였습니다"); history.go(-1); </script> <%
+            session.setAttribute("id", userID);
+            session.setAttribute("name", userName);
+            session.setAttribute("index", userIndex);
+            response.sendRedirect("recommend.jsp");
         }
         else{
           %> <script> alert("로그인에 실패하였습니다"); history.go(-1); </script> <%
