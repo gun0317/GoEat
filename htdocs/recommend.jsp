@@ -31,19 +31,19 @@
                         <img class="d-block w-100" src="img/slide1.JPG" alt="First slide"></div>
                     <div class="carousel-caption d-none d-md-block">
                         <h5>First Food</h5>
-                        <p>hhhhhhhhhhhhhhh</p>
-                    </div>
+                        <span id="first"></span>
+                        <div>
                     <div class="carousel-item">
                         <img class="d-block w-100" src="img/slide2.JPG" alt="Second slide"></div>
                     <div class="carousel-caption d-none d-md-block">
-                        <h5>First Food</h5>
-                        <p>hhhhhhhhhhhhhhh</p>
+                        <h5>Second Food</h5>
+                         <span id="second"></span>
                     </div>
                     <div class="carousel-item">
                         <img class="d-block w-100" src="img/slide3.JPG" alt="Third slide"></div>
                     <div class="carousel-caption d-none d-md-block">
-                        <h5>First Food</h5>
-                        <p>hhhhhhhhhhhhhhh</p>
+                        <h5>Third Food</h5>
+                         <span id="third"></span>
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -64,14 +64,28 @@
     </div>
     <div>
       <%
+      String requestedIndex = request.getParameter("userID");
+      String userIndex = " " + requestedIndex;
+      String cmdline = "C:\\Users\\이영건\\AppData\\Local\\Programs\\Python\\Python37\\pythonw.exe D:\\GoogleDrive\\YGun\\Programming\\Tomcat\\GoEatJSP.py" + userIndex;
+      try {
+           String line;
+           Process p = Runtime.getRuntime().exec(cmdline);
+           BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-    PythonInterpreter interpreter;
-    interpreter = new PythonInterpreter();
-    interpreter.exec("import pip");
+           line = input.readLine();
+           %><script>document.getElementById('first').innerHTML = <%=line%>;</script><%
+           line = input.readLine();
+           %><script>document.getElementById('first').innerHTML = <%=line%>;</script><%
+           line = input.readLine();
+           %><script>document.getElementById('first').innerHTML = <%=line%>;</script><%
 
-    %>
+           input.close();
 
-
+           }
+          catch (Exception err) {
+           err.printStackTrace();
+           }
+      %>
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
