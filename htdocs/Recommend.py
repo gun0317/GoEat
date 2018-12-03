@@ -8,13 +8,13 @@ from sklearn.model_selection import train_test_split
 
 def get_rec(user_index,mode='default'):
 
-'''user_index :  [user_index]에게 음식 추천
+    '''user_index :  [user_index]에게 음식 추천
 
-mode = 'default'
-'default' : 기본(상황 적용하지 않음)
-'Alone' : 혼자 먹을 때
-'Together' : 같이 먹을 때
-'Date' : 데이트 할 때'''
+    mode = 'default'
+    'default' : 기본(상황 적용하지 않음)
+    'Alone' : 혼자 먹을 때
+    'Together' : 같이 먹을 때
+    'Date' : 데이트 할 때'''
 
     db = pymysql.connect(host = 'localhost',port=3306,user='root',password ='xlsh5201',db='goeat',charset = 'utf8')
     #db = pymysql.connect(host = 'DESKTOP-PD3BJSG',port=3306,user='mysql',password ='mysql93',db='goeat',charset = 'utf8')
@@ -116,7 +116,7 @@ mode = 'default'
     tfidf_df = pd.DataFrame(list(data),columns = col_name)
 
     #test
-    tfidf_df = pd.read_csv('tfidf.csv',encoding = 'cp949')
+    #tfidf_df = pd.read_csv('tfidf.csv',encoding = 'cp949')
 
     tfidf_df.index = tfidf_df.index + 1
 
@@ -372,6 +372,10 @@ mode = 'default'
 
 if __name__ == "__main__":
     requestedIndex = sys.argv[1]
-    get_rec(int(requestedIndex))
+    if len(sys.argv) == 3:
+        mode_ = sys.argv[2]
+    else :
+        mode_ = 'default'
+    get_rec(int(requestedIndex),mode_)
     #
     #interaction_df
