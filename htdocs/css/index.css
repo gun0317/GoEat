@@ -68,3 +68,29 @@ img {
 .register  hr{
      border-width: 2px;
 }
+
+.slide{
+
+  background-color: #FDD692;
+
+}
+
+.customized {
+    position: absolute;
+    right: 15%;
+    bottom: 20px;
+    left: 15%;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: black;
+    text-align: center;
+}
+
+#first, #second, #third{
+    font-size: 50px;
+}
+
+.center{
+    margin-bottom: 14%; 
+}

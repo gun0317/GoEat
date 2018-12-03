@@ -1,4 +1,4 @@
-<%@page import="java.sql.*, org.python.util.PythonInterpreter, org.python.core.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*, java.io.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 
@@ -28,22 +28,22 @@
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100" src="img/slide1.JPG" alt="First slide"></div>
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>First Food</h5>
-                        <span id="first"></span>
-                        <div>
-                    <div class="carousel-item">
-                        <img class="d-block w-100" src="img/slide2.JPG" alt="Second slide"></div>
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Second Food</h5>
-                         <span id="second"></span>
+                        <img class="d-block w-100" src="img/slide1.JPG" alt="First slide">
+                        <div class="carousel-caption d-none d-md-block center">
+                            <p> <span id="first"></span> </p>
+                       </div>
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src="img/slide3.JPG" alt="Third slide"></div>
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Third Food</h5>
-                         <span id="third"></span>
+                        <img class="d-block w-100" src="img/slide2.JPG" alt="Second slide">
+                        <div class="carousel-caption d-none d-md-block center">
+                            <p><span id="second"></span></p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="img/slide3.JPG" alt="Third slide">
+                        <div class="carousel-caption d-none d-md-block center">
+                            <p> <span id="third"></span> </p>
+                        </div>
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -64,20 +64,27 @@
     </div>
     <div>
       <%
-      String requestedIndex = request.getParameter("userID");
-      String userIndex = " " + requestedIndex;
-      String cmdline = "C:\\Users\\이영건\\AppData\\Local\\Programs\\Python\\Python37\\pythonw.exe D:\\GoogleDrive\\YGun\\Programming\\Tomcat\\GoEatJSP.py" + userIndex;
+      String cmdline = "C:\\Users\\gkssk\\Anaconda3\\envs\\tensorflow\\pythonw.exe C:\\htdocs\\Recommend.py " + session.getAttribute("index");
+      %><script>console.log("<%=cmdline%>");</script><%
       try {
            String line;
            Process p = Runtime.getRuntime().exec(cmdline);
            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
            line = input.readLine();
-           %><script>document.getElementById('first').innerHTML = <%=line%>;</script><%
+           %><script>
+              document.getElementById('first').innerHTML = "<%=line%>";
+           </script><%
+
            line = input.readLine();
-           %><script>document.getElementById('first').innerHTML = <%=line%>;</script><%
+           %><script>
+              document.getElementById('second').innerHTML = "<%=line%>";
+           </script><%
+
            line = input.readLine();
-           %><script>document.getElementById('first').innerHTML = <%=line%>;</script><%
+           %><script>
+              document.getElementById('third').innerHTML ="<%=line%>";
+           </script><%
 
            input.close();
 
