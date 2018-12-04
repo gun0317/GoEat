@@ -1,0 +1,7 @@
+DB 비밀번호바꿔야됨:
+login.jsp
+register.jsp
+Recommend.py
+
+Python 경로, Recommend.py 경로 수정해야됨:
+recommend.jsp   81번줄 cmdline부분
