@@ -29,9 +29,9 @@
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                      <div style="position:relative; width:770px; height:150px;overflow:hidden;">
-                      <div style="position:absolute;left:-20px; top:-275px;">
-                            <iframe id="first_food_img" src='' width="770" height="560" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                      <div style="position:relative; width:780px; height:100px;overflow:hidden;">
+                      <div style="position:absolute;left:-30px; top:-305px;">
+                            <iframe id="first_food_img" src='' width="780" height="560" frameborder="0" scrolling="no"></iframe>
                       </div></div>
                         <img class="d-block w-100" src="img/slide1.JPG" alt="First slide">
                         <div class="carousel-caption d-none d-md-block center">
@@ -40,9 +40,9 @@
                        </div>
                     </div>
                     <div class="carousel-item">
-                      <div style="position:relative; width:780px; height:150px;overflow:hidden;">
-                      <div style="position:absolute;left:-20px; top:-275px;">
-                            <iframe id="second_food_img" src='' width="780" height="560" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                      <div style="position:relative; width:780px; height:100px;overflow:hidden;">
+                      <div style="position:absolute;left:-30px; top:-305px;">
+                            <iframe id="second_food_img" src='' width="780" height="560" frameborder="0" scrolling="no"></iframe>
                       </div></div>
                         <img class="d-block w-100" src="img/slide2.JPG" alt="Second slide">
                         <div class="carousel-caption d-none d-md-block center">
@@ -50,9 +50,9 @@
                         </div>
                     </div>
                     <div class="carousel-item">
-                      <div style="position:relative; width:780px; height:150px;overflow:hidden;">
-                      <div style="position:absolute;left:-20px; top:-275px;">
-                            <iframe id="third_food_img" src='' width="780" height="560" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                      <div style="position:relative; width:780px; height:100px;overflow:hidden;">
+                      <div style="position:absolute;left:-30px; top:-305px;">
+                            <iframe id="third_food_img" src='' width="780" height="560" frameborder="0" scrolling="no"></iframe>
                       </div></div>
                         <img class="d-block w-100" src="img/slide3.JPG" alt="Third slide">
                         <div class="carousel-caption d-none d-md-block center">
@@ -88,6 +88,9 @@
            line = input.readLine();
            %><script>
               document.getElementById('first').innerHTML = "<%=line%>";
+              <%
+                if(line.equals("초밥")) line = "맛있는 초밥집";
+              %>
               var imgsrc = "https://search.daum.net/search?w=img&nil_search=btn&DA=NTB&enc=utf8&q=" + "<%=line%>";
               document.getElementById('first_food_img').setAttribute('src',imgsrc);
            </script><%
@@ -95,6 +98,9 @@
            line = input.readLine();
            %><script>
               document.getElementById('second').innerHTML = "<%=line%>";
+              <%
+                if(line.equals("초밥")) line = "맛있는 초밥집";
+              %>
               var imgsrc2 = "https://search.daum.net/search?w=img&nil_search=btn&DA=NTB&enc=utf8&q=" + "<%=line%>";
               document.getElementById('second_food_img').setAttribute('src',imgsrc2);
            </script><%
@@ -102,6 +108,9 @@
            line = input.readLine();
            %><script>
               document.getElementById('third').innerHTML ="<%=line%>";
+              <%
+                if(line.equals("초밥")) line = "맛있는 초밥집";
+              %>
               var imgsrc3 = "https://search.daum.net/search?w=img&nil_search=btn&DA=NTB&enc=utf8&q=" + "<%=line%>";
               document.getElementById('third_food_img').setAttribute('src',imgsrc3);
            </script><%
