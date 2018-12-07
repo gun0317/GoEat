@@ -7,42 +7,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RatingDAO {
-	//1. µå¶óÀÌ¹ö ·Îµù (Oracle Library) °¡Á®¿À±â
-	static { 
+	//1. ë“œë¼ì´ë²„ ë¡œë”© (Oracle Library) ê°€ì ¸ì˜¤ê¸°
+	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			System.out.println("¿À¶óÅ¬ Å¬·¡½º ¾øÀ½");
+			System.out.println("ì˜¤ë¼í´ í´ë˜ìŠ¤ ì—†ìŒ");
 			e.printStackTrace();
-			System.exit(1); 
+			System.exit(1);
 		}
 	}
-	
+
 	public Connection getConnection () throws SQLException {
-	
+
 		Connection con=DriverManager.getConnection(
-				 "jdbc:mysql://localhost:3306/goeat?serverTimezone=UTC", "root", "root002"); 
+				 "jdbc:mysql://localhost:3306/goeat?serverTimezone=UTC", "root", "root001");
 		return con;
 	}
-	
-	//findUser(): ¼¼¼Ç¿¡ ÀúÀåµÈ userId¸¦ ÀÌ¿ëÇØ¼­ userInfo¿¡ ÀÖ´Â userIndex ²¨³»¿À±â
+
+	//findUser(): ì„¸ì…˜ì— ì €ì¥ëœ userIdë¥¼ ì´ìš©í•´ì„œ userInfoì— ìˆëŠ” userIndex êº¼ë‚´ì˜¤ê¸°
 	public int findUser(String sessionId) throws SQLException{
 		Connection con=getConnection();
-		String q="Select userIndex from user_info where userId=?";
+		String q="select userIndex from user_info where userId=?";
 		PreparedStatement ps=con.prepareStatement(q);
 		ps.setString(1, sessionId);
-		
+
 		ResultSet rs=ps.executeQuery();
 		rs.next();
 		Integer userIndex=rs.getInt(1);
-		
+
 		ps.close();
 		con.close();
-		
+
 		return userIndex;
 	}
-	
-	//findFoodName(): foodIndex¹ŞÀ¸¸é foodName °¡Á®¿À±â
+
+	//findFoodName(): foodIndexë°›ìœ¼ë©´ foodName ê°€ì ¸ì˜¤ê¸°
 	public String findFoodName(int foodIndex) throws SQLException{
 		Connection con=getConnection();
 		String q="select foodName from food where foodIndex=?";
@@ -51,49 +51,49 @@ public class RatingDAO {
 		ResultSet rs=ps.executeQuery();
 		rs.next();
 		String foodName = rs.getString(1);
-		
+
 		ps.close();
 		con.close();
-		
+
 		return foodName;
 	}
-	
-	//numofFood(): µ¥ÀÌÅÍº£ÀÌ½º¿¡ ÀÖ´Â À½½ÄÀÇ °³¼ö ¸®ÅÏ
+
+	//numofFood(): ë°ì´í„°ë² ì´ìŠ¤ì— ìˆëŠ” ìŒì‹ì˜ ê°œìˆ˜ ë¦¬í„´
 	public int numofFood() throws SQLException{
 		Connection con=getConnection();
-		String q="Select * from food";
+		String q="select * from food";
 		PreparedStatement ps=con.prepareStatement(q);
-		
+
 		int count=0;
 		//count=ps.executeUpdate();
 		ResultSet rs=ps.executeQuery();
 		while (rs.next()) {
 			count=count+1;
 		}
-		
+
 		ps.close();
 		con.close();
-		
+
 		return count;
 	}
-	
-	//save(): Rating Å¬·¡½º¿¡ ÀúÀåµÈ µ¥ÀÌÅÍ DB¿¡ ÀúÀå
+
+	//save(): Rating í´ë˜ìŠ¤ì— ì €ì¥ëœ ë°ì´í„° DBì— ì €ì¥
 	public void save(Rating r) throws SQLException {
-		Connection con=getConnection(); 
+		Connection con=getConnection();
 
-		String q="Insert into interactions values(?, ?, ?)"; 
-		PreparedStatement ps=con.prepareStatement(q); 
+		String q="insert into interactions values(?, ?, ?)";
+		PreparedStatement ps=con.prepareStatement(q);
 
-		ps.setInt(1, r.getUserIndex());
+		ps.setInt(1, r.getUserIndex()); //
 		ps.setInt(2, r.getFoodIndex());
 		ps.setInt(3, r.getEventStrength());
-	
-		int count=ps.executeUpdate(); 
-		//°á°ú Ã³¸® 
+
+		int count=ps.executeUpdate();
+		//ê²°ê³¼ ì²˜ë¦¬
 		if (count>0) {
-			System.out.println("ÀúÀå ¼º°ø");
+			System.out.println("ì €ì¥ ì„±ê³µ");
 		} else {
-			System.out.println("ÀúÀå ½ÇÆĞ");
+			System.out.println("ì €ì¥ ì‹¤íŒ¨");
 		}
 
 		ps.close();

@@ -15,59 +15,60 @@ import edu.skku.web.goeat.Rating;
 
 
 @WebServlet("/rating.do")
-public class RatingServlet extends HttpServlet {	
+public class RatingServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	RatingDAO dao = new RatingDAO();
-	
+
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("euc-kr");
-		//¿äÃ»ºĞ¼®
+		request.setCharacterEncoding("utf-8");
+		//ìš”ì²­ë¶„ì„
 		String action = request.getParameter("action");
 		if (action.equals("save")) {
 			save(request, response);
-		} 
+		}
 	}
-	
+
 	protected void save(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		
-		//·£´ıÀ¸·Î À½½Ä 15°³ ¼±ÅÃÇØ¼­, »ç¿ëÀÚ°¡ ratingÇÒ ¶§- À½½Ä¹øÈ£¿Í Á¡¼ö°¡ ratingListÀÇ 1, 2¹øÂ°¿¡ ´ã±è
+
+		//ëœë¤ìœ¼ë¡œ ìŒì‹ 15ê°œ ì„ íƒí•´ì„œ, ì‚¬ìš©ìê°€ ratingí•  ë•Œ- ìŒì‹ë²ˆí˜¸ì™€ ì ìˆ˜ê°€ ratingListì˜ 1, 2ë²ˆì§¸ì— ë‹´ê¹€
 		for (int i=0; i<15; i++) {
 			//String no=Integer.toString(i);
 			String rating_value=request.getParameter("food"+i);
 			String[] rating_value_list = rating_value.split("-");
-	
-			
-			//int userId = ¼¼¼Ç¿¡¼­ °¡Á®¿À±â
-			//int userIndex = DB¿¡¼­ Ã£¾Æ¿À±â. DAO¿¡¼­ save ¸Ş¼­µå¿¡ q2 ¸¸µé¾î¼­ ºÒ·¯¿À¸é µÉ°Í°°À½.
+
+
+			//int userId = ì„¸ì…˜ì—ì„œ ê°€ì ¸ì˜¤ê¸°
+			//int userIndex = DBì—ì„œ ì°¾ì•„ì˜¤ê¸°. DAOì—ì„œ save ë©”ì„œë“œì— q2 ë§Œë“¤ì–´ì„œ ë¶ˆëŸ¬ì˜¤ë©´ ë ê²ƒê°™ìŒ.
 			int foodIndex = Integer.parseInt(rating_value_list[0]);
 			int eventStrength = Integer.parseInt(rating_value_list[1]);
-			
+
 			HttpSession ss= request.getSession();
 			String sessionId = (String)ss.getAttribute("id");
-			
-			//Ã³¸®
+
+			//ì²˜ë¦¬
 			try {
 				Rating r=new Rating(dao.findUser(sessionId), foodIndex, eventStrength);
 				dao.save(r);
-				
+
 			} catch (SQLException e) {
-				request.setAttribute("msg", "ÀúÀå Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù. È¸¿ø°¡ÀÔÀ» ´Ù½Ã ÁøÇàÇØÁÖ¼¼¿ä. ");
-				e.printStackTrace(); 
-				//ÀúÀå Áß ¿À·ù ¹ß»ıÇÏ¸é error.jsp·Î ÀÌµ¿
+				request.setAttribute("msg", "ì €ì¥ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. íšŒì›ê°€ì…ì„ ë‹¤ì‹œ ì§„í–‰í•´ì£¼ì„¸ìš”. ");
+				e.printStackTrace();
+				//ì €ì¥ ì¤‘ ì˜¤ë¥˜ ë°œìƒí•˜ë©´ error.jspë¡œ ì´ë™
 				request.getRequestDispatcher("error.jsp").forward(request, response);
-				break; //¿À·ù ³ª¸é for¹® ¸ØÃß±â
+				break; //ì˜¤ë¥˜ ë‚˜ë©´ forë¬¸ ë©ˆì¶”ê¸°
 			}
-			request.setAttribute("msg", "ÀúÀå ¿Ï·á");
+			request.setAttribute("msg", "ì €ì¥ ì™„ë£Œ");
 		}
-		//°á°úÆäÀÌÁö ÀÌµ¿
-		request.getRequestDispatcher("index.html").forward(request, response);	
+		//ê²°ê³¼í˜ì´ì§€ ì´ë™
+		request.getRequestDispatcher("index.html").forward(request, response);
+		return;
 
 	}
 

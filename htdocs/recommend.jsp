@@ -78,7 +78,7 @@
     </div>
     <div>
       <%
-      String cmdline = "C:\\Python37\\pythonw.exe D:\\Recommend.py " + session.getAttribute("index");
+      String cmdline = "C:\\Users\\gkssk\\Anaconda3\\envs\\tensorflow\\pythonw.exe C:\\htdocs\\Recommend.py " + session.getAttribute("index");
       %><script>console.log("<%=cmdline%>");</script><%
       try {
            String line;

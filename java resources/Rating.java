@@ -7,25 +7,25 @@ public class Rating {
 	private String userid;
 
 	public Rating() {}
-	
-	
+
+
 	public Rating (int userIndex, int foodIndex, int eventStrength, String userid) {
 		this.userIndex = userIndex;
 		this.foodIndex=foodIndex;
 		this.eventStrength=eventStrength;
 		this.userid=userid;
 	}
-	
+
 	public Rating (int userIndex, int foodIndex, int eventStrength) {
 		this.userIndex = userIndex;
 		this.foodIndex=foodIndex;
 		this.eventStrength=eventStrength;
 	}
-	
+
 	public Rating (int foodIndex, int eventStrength) {
 		this.eventStrength=eventStrength;
 	}
-	
+
 
 	public int getUserIndex() {
 		return userIndex;
@@ -73,6 +73,6 @@ public class Rating {
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 
 }

@@ -17,10 +17,10 @@ def get_rec(user_index,mode='default'):
     'Date' : 데이트 할 때'''
 
     #영건 DB
-    db = pymysql.connect(host = 'localhost',port=3306,user='root',password ='xlsh5201',db='goeat',charset = 'utf8')
+    db = pymysql.connect(host = 'localhost',port=3306,user='root',password ='root001',db='goeat',charset = 'utf8')
     #태년 DB
     #db = pymysql.connect(host = 'DESKTOP-PD3BJSG',port=3306,user='mysql',password ='mysql93',db='goeat',charset = 'utf8')
-    
+
 
     cursor = db.cursor()
 

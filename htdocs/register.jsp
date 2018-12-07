@@ -19,7 +19,7 @@
         int r;
 
         Class.forName( "com.mysql.jdbc.Driver" );
-        conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/goeat?serverTimezone=UTC", "root", "xlsh5201" );
+        conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/goeat?serverTimezone=UTC", "root", "root001" );
         stmt = conn.createStatement();
 
 
@@ -37,9 +37,10 @@
 
         r = stmt.executeUpdate("insert into user_info" + "(userId, password, userName, phone, age, sex)" + "values('" + myid + "','" + mypassword + "','" + myname + "','" + myphone + "','" + age + "','" + mygender + "')");
 
-
         if( r>0 ){
-            %> <script> alert("회원가입에 성공하였습니다"); location.replace("index.html") </script> <%
+         
+            session.setAttribute("id", myid);
+            %> <script> alert("회원가입에 성공하였습니다"); location.replace("food_rating.jsp") </script> <%
         }
         else{
             %> <script> alert("회원가입에 실패하였습니다"); history.go(-1); </script> <%

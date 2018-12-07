@@ -16,7 +16,7 @@
     try
     {
         Class.forName( "com.mysql.jdbc.Driver" );
-        conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/goeat?serverTimezone=UTC", "root", "xlsh5201" );
+        conn = DriverManager.getConnection( "jdbc:mysql://localhost:3306/goeat?serverTimezone=UTC", "root", "root001" );
         stmt = conn.createStatement();
 
         ResultSet rs = stmt.executeQuery("select * from user_info");

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="EUC-KR" import="edu.skku.web.goeat.RatingDAO, java.util.Random, edu.skku.web.goeat.RatingServlet" %>
+    pageEncoding="UTF-8" import="edu.skku.web.goeat.RatingDAO, java.util.Random, edu.skku.web.goeat.RatingServlet" %>
 
 <!DOCTYPE html>
 <html>
@@ -13,7 +13,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<% 
+<%
 	//RatingServlet rs=new RatingServlet();
 	int[] numbers=new int[15];
 
@@ -24,8 +24,8 @@
 	Random r = new Random();
 	String number;
 
-	
-	
+
+
 	for (int i=0; i<numbers.length; i++) {
 		numbers[i] = r.nextInt(numF)+1;
 		//numbers[i] = i+1;
@@ -35,24 +35,24 @@
 			if (numbers[j] == numbers[i]) {
 				i=i-1;
 				break;
-		
+
 
 			}
 		}
 	}
-	
+
 
 
 %>
 
 <div class="container food_rating" style="width:60%"><br>
-        <br><h2> À½½Ä ¼±È£µµ¸¦ Ã¼Å©ÇØÁÖ¼¼¿ä </h2> 
-        ÃßÃµ ¾Ë°í¸®ÁòÀ» À§ÇÑ À½½Ä ¼±È£µµ Æò°¡ ÆäÀÌÁöÀÔ´Ï´Ù. ´ÙÀ½ À½½ÄÀ» º¸°í ¾ó¸¶³ª ÁÁ¾ÆÇÏ´Â Áö Æò°¡ÇØ ÁÖ¼¼¿ä.<br> <br>
-        ÇØ´ç À½½ÄÀ» Á¢ÇØº¸Áö ¾Ê¾Ò´Ù¸é *¸¦,<br> ÇØ´ç À½½ÄÀ» º°·Î ÁÁ¾ÆÇÏÁö ¾Ê´Â´Ù¸é 1Á¡À»,<br> ÇØ´ç À½½ÄÀ» ¸Å¿ì ÁÁ¾ÆÇÑ´Ù¸é 5Á¡À» ¼±ÅÃÇØÁÖ¼¼¿ä.
-        <br><hr>
+      <br><h2> ìŒì‹ ì„ í˜¸ë„ë¥¼ ì²´í¬í•´ì£¼ì„¸ìš” </h2>
+       ì¶”ì²œ ì•Œê³ ë¦¬ì¦˜ì„ ìœ„í•œ ìŒì‹ ì„ í˜¸ë„ í‰ê°€ íŽ˜ì´ì§€ìž…ë‹ˆë‹¤. ë‹¤ìŒ ìŒì‹ì„ ë³´ê³  ì–¼ë§ˆë‚˜ ì¢‹ì•„í•˜ëŠ” ì§€ í‰ê°€í•´ ì£¼ì„¸ìš”.<br> <br>
+       í•´ë‹¹ ìŒì‹ì„ ì ‘í•´ë³´ì§€ ì•Šì•˜ë‹¤ë©´ *ë¥¼,<br> í•´ë‹¹ ìŒì‹ì„ ë³„ë¡œ ì¢‹ì•„í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ 1ì ì„,<br> í•´ë‹¹ ìŒì‹ì„ ë§¤ìš° ì¢‹ì•„í•œë‹¤ë©´ 5ì ì„ ì„ íƒí•´ì£¼ì„¸ìš”.
+       <br><hr>
         <form action="rating.do?action=save" method="post" >
-        <% for (int k=0; k<15; k++ ) {%> 
-        	<h5><%= names[k] %>&nbsp;&nbsp;&nbsp;</h5>        	
+        <% for (int k=0; k<15; k++ ) {%>
+        	<h5><%= names[k] %>&nbsp;&nbsp;&nbsp;</h5>
         	<div class="form-check form-check-inline">
 				<input class="form-check-input" type="radio" name="<%="food"+k%>" value="<%=numbers[k]%>-0">* &nbsp;&nbsp;&nbsp;
   				<input class="form-check-input" type="radio" name="<%="food"+k%>" value="<%=numbers[k]%>-1">1 &nbsp;&nbsp;&nbsp;
@@ -63,12 +63,12 @@
 			</div> <br><br>
 		<% } %>
 		<br><br><br>
-			
-			<input type="button" value="&nbsp;&nbsp;&nbsp;ÀÌÀü ÆäÀÌÁö&nbsp;&nbsp;&nbsp" class="btn btn-primary" style="background:#47b8e0; border:0px; outline:0" onClick="location.href='register.html';"/>&nbsp;&nbsp;&nbsp;
-            <input type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;È®ÀÎ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp" class="btn btn-primary" style="background:#47b8e0; border:0px; outline:0"/>
+
+			<input type="button" value="&nbsp;&nbsp;&nbsp;ì´ì „ íŽ˜ì´ì§€&nbsp;&nbsp;&nbsp" class="btn btn-primary" style="background:#47b8e0; border:0px; outline:0" onClick="location.href='register.html';"/>&nbsp;&nbsp;&nbsp;
+            <input type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;í™•ì¸&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp" class="btn btn-primary" style="background:#47b8e0; border:0px; outline:0"/>
         </form>
         <br><br>
-       
+
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -22,6 +22,17 @@
   version="4.0"
   metadata-complete="true">
 
+  <servlet>
+    <servlet-name>RatingServlet</servlet-name>
+    <servlet-class>edu.skku.web.goeat.RatingServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RatingServlet</servlet-name>
+    <url-pattern>/rating.do</url-pattern>
+  </servlet-mapping>
+
+
   <display-name>Welcome to Tomcat</display-name>
   <description>
      Welcome to Tomcat
